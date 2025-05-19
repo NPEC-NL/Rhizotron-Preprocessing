@@ -20,7 +20,7 @@ from PIL import ImageChops
 from PIL import ImageMath
 ###################################################################################
 #User VARIABLES
-data_path = "E:/30/20250411/barley/G_VDSMO_0300_0800_2IR_1.0"
+data_path = "Path to your top level image for example c:/Rhizotron_download/G_VDSMO_0300_0800_2IR_1.0"
 ############################################################################################
 
 # Get all subfolders in the directory and sort them by timestamp
