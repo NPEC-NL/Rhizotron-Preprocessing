@@ -20,7 +20,7 @@ from PIL import ImageChops
 from PIL import ImageMath
 ###################################################################################
 #User VARIABLES
-data_path = "E:/30/20250411/barley/G_VDSMO_0300_0800_2IR_1.0"
+data_path = "Topfolder goes here for example 'C:/Rhizotron_Image//G_VDSMO_0300_0800_2IR_1.0'"
 ############################################################################################
 
 # Get all subfolders in the directory and sort them by timestamp
@@ -145,7 +145,7 @@ for i in range(0, len(subfolders), 2):
     output_name = f"{plant_id}_{datetime_str}.png"
     # Convert the NumPy array back to a Pillow image and save it
     result_image = Image.fromarray(result_array, mode="L")
-    output_path = os.path.join(data_path, f"{output_name}result_image.png")   
+    output_path = os.path.join(data_path, f"{output_name}_result_image.png")   
     result_image.save(output_path, format="png")
 
     print(f"Result image saved")
