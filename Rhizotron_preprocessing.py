@@ -107,16 +107,23 @@ for i in range(0, len(subfolders), 2):
    #denominator = red_array + blue_array + 1e-6  
     numerator = blue_array
     denominator = red_array + 1e-6  
-    result_array = numerator / denominator
-
+    
     # To avoid glare from those weird hook things, we only normalize on the rhizotron area
-    cropped_array = result_array[3500:, 1500:-1500]
-    lower_bound = np.percentile(cropped_array, 0.5)
-    upper_bound = np.percentile(cropped_array, 99.5)
+    cropped_array = numerator[3500:, 1500:-1500]
+    lower_bound = np.percentile(cropped_array, 2)
+    upper_bound = np.percentile(cropped_array, 98)
+    numerator = np.clip(numerator, lower_bound, upper_bound)
 
-    #result_array = np.clip(result_array, lower_bound, upper_bound)
+    cropped_array = denominator[3500:, 1500:-1500]
+    lower_bound = np.percentile(cropped_array, 2)
+    upper_bound = np.percentile(cropped_array, 98)
+    denominator = np.clip(denominator, lower_bound, upper_bound)
+
+
+    result_array = numerator * denominator
 
     #Next we need to remove the weird stripes that are caused by the scanner
+    cropped_array = result_array[3500:, 1500:-1500]
     row_means = np.mean(cropped_array, axis=0, keepdims=True)
     row_means[row_means == 0] = 1e-6
     result_array[:, 1500:-1500] = result_array[:, 1500:-1500] / row_means
