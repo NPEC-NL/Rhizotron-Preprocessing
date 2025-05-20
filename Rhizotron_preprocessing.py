@@ -20,7 +20,7 @@ from PIL import ImageChops
 from PIL import ImageMath
 ###################################################################################
 #User VARIABLES
-data_path = "Path to your top level image for example c:/Rhizotron_download/G_VDSMO_0300_0800_2IR_1.0"
+data_path = "E:/30/20250411/barley/G_VDSMO_0300_0800_2IR_1.0"
 ############################################################################################
 
 # Get all subfolders in the directory and sort them by timestamp
@@ -107,7 +107,6 @@ for i in range(0, len(subfolders), 2):
    #denominator = red_array + blue_array + 1e-6  
     numerator = blue_array
     denominator = red_array + 1e-6  
-    
     # To avoid glare from those weird hook things, we only normalize on the rhizotron area
     cropped_array = numerator[3500:, 1500:-1500]
     lower_bound = np.percentile(cropped_array, 2)
@@ -122,6 +121,8 @@ for i in range(0, len(subfolders), 2):
 
     result_array = numerator * denominator
 
+    #result_array = np.clip(result_array, lower_bound, upper_bound)
+
     #Next we need to remove the weird stripes that are caused by the scanner
     cropped_array = result_array[3500:, 1500:-1500]
     row_means = np.mean(cropped_array, axis=0, keepdims=True)
@@ -129,6 +130,9 @@ for i in range(0, len(subfolders), 2):
     result_array[:, 1500:-1500] = result_array[:, 1500:-1500] / row_means
 
     # Normalize the result to the range [0, 1] using only the rhizotron region.
+    cropped_array = result_array[3500:, 1500:-1500]
+    lower_bound = np.percentile(cropped_array, 0.5)
+    upper_bound = np.percentile(cropped_array, 99.5)
     result_array = (result_array - lower_bound) / (upper_bound - lower_bound)
     result_array = np.clip(result_array, 0, 1)
     result_array = (result_array * 255).astype(np.uint8)
@@ -141,7 +145,6 @@ for i in range(0, len(subfolders), 2):
     output_name = f"{plant_id}_{datetime_str}.png"
     # Convert the NumPy array back to a Pillow image and save it
     result_image = Image.fromarray(result_array, mode="L")
-    output_name = os.path.basename(folder1)
     output_path = os.path.join(data_path, f"{output_name}result_image.png")   
     result_image.save(output_path, format="png")
 
